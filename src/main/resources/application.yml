@@ -1,0 +1,10 @@
+
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DATABASE_USER:postgres}
+    password: ${DATABASE_PASSWORD:mysecretpassword}
+  sql:
+    init:
+      data-locations=classpath: data/massa_clientes.sql
+
