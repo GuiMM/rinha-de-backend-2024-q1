@@ -2,7 +2,7 @@
 CREATE TABLE cliente (
     id SERIAL PRIMARY KEY,
     limite INTEGER,
-    saldo_inicial INTEGER
+    saldoInicial INTEGER
 );
 
 CREATE TABLE transacao (
@@ -10,12 +10,12 @@ CREATE TABLE transacao (
     valor INTEGER,
     tipo CHAR(1),
     descricao TEXT,
-    realizada_em TIMESTAMP NOT NULL,
-    cliente_id INTEGER REFERENCES cliente(id) ON DELETE CASCADE
+    realizadaEm TIMESTAMP NOT NULL,
+    clienteId INTEGER REFERENCES cliente(id) ON DELETE CASCADE
 );
 
-INSERT INTO cliente (limite, saldo_inicial) VALUES (100000, 0);
-INSERT INTO cliente (limite, saldo_inicial) VALUES (80000, 0);
-INSERT INTO cliente (limite, saldo_inicial) VALUES (1000000, 0);
-INSERT INTO cliente (limite, saldo_inicial) VALUES (10000000, 0);
-INSERT INTO cliente (limite, saldo_inicial) VALUES (500000, 0);
+INSERT INTO cliente (limite, saldoInicial) VALUES (100000, 0);
+INSERT INTO cliente (limite, saldoInicial) VALUES (80000, 0);
+INSERT INTO cliente (limite, saldoInicial) VALUES (1000000, 0);
+INSERT INTO cliente (limite, saldoInicial) VALUES (10000000, 0);
+INSERT INTO cliente (limite, saldoInicial) VALUES (500000, 0);
