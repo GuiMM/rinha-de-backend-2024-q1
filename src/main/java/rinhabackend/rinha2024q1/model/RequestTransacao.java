@@ -1,7 +1,10 @@
 package rinhabackend.rinha2024q1.model;
 
+import lombok.Data;
+
+@Data
 public class RequestTransacao {
-    public Integer valor;
-    public char tipo;
-    public String descricao;
+    private Integer valor;
+    private String tipo;
+    private String descricao;
 }

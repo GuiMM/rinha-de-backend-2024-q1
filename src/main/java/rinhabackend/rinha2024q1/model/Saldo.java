@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 public class Saldo {
@@ -12,7 +13,7 @@ public class Saldo {
     private Integer total;
 
     @JsonProperty(value = "data_extrato")
-    private LocalDate dataExtrato;
+    private LocalDateTime dataExtrato;
 
     private Integer limite;
 }

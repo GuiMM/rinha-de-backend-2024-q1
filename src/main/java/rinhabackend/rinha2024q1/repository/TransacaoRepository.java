@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ParameterMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import rinhabackend.rinha2024q1.enums.TipoTransacao;
 import rinhabackend.rinha2024q1.model.Transacao;
 import rinhabackend.rinha2024q1.model.TransacaoDTO;
 
@@ -17,19 +18,42 @@ public class TransacaoRepository {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     public int insertTransacao(TransacaoDTO transacao){
-        Map<String,String> map = new HashMap<>();
-        map.put(":clientId", transacao.getClienteId().toString());
-        map.put(":valor", transacao.getValor().toString());
-        map.put(":tipo", String.valueOf(transacao.getTipo()));
-        map.put(":descricao", transacao.getDescricao());
+        Map<String, Object>  map = new HashMap<>();
+        map.put("clientId", transacao.getClienteId());
+        map.put("valor", transacao.getValor());
+        map.put("tipo", String.valueOf(transacao.getTipo()));
+        map.put("descricao", transacao.getDescricao());
 
-        String query = "INSERT INTO transacao " +
+
+        String queryCreditos = "INSERT INTO transacao " +
                 " (valor, " +
                 " tipo ," +
                 " descricao ,\n" +
-                " realizada_em ,\n" +
-                " cliente_id ) VALUES " +
-                " ( :valor, :tipo, :descricao, sysdate, :clientId )";
+                " realizadaem ,\n" +
+                " clienteid ) VALUES " +
+                " ( :valor, :tipo, :descricao, CURRENT_TIMESTAMP, :clientId )";
+
+
+        String queryDebitos =
+                "  with insert_values as (\n" +
+                        "     select :valor as valor, :tipo as tipo, :descricao as descricao, CURRENT_TIMESTAMP as realizadaem, :clientId as clienteid" +
+                        "     ) " +
+                        "INSERT INTO transacao (valor, tipo, descricao, realizadaem, clienteid) \n" +
+                        "SELECT insert_values.valor, insert_values.tipo, insert_values.descricao, insert_values.realizadaem, insert_values.clienteid\n" +
+                        "FROM cliente c, insert_values\n" +
+                        "WHERE id = :clientId \n" +
+                        "AND -1 * limite <= (saldoInicial + (\n" +
+                        "    SELECT CASE WHEN sum(valor) IS NOT NULL THEN sum(valor) ELSE 0 END\n" +
+                        "    FROM transacao\n" +
+                        "    WHERE clienteId = :clientId AND tipo = 'c'\n" +
+                        ") - (\n" +
+                        "    SELECT CASE WHEN sum(valor) IS NOT NULL THEN sum(valor) ELSE 0 END\n" +
+                        "    FROM transacao\n" +
+                        "    WHERE clienteId = :clientId AND tipo = 'd'\n" +
+                        ")) - :valor ";
+
+        String query = transacao.getTipo().equals(TipoTransacao.CREDITO.getTipo()) ? queryCreditos : queryDebitos;
+
         return jdbcTemplate.update(query, map);
     }
 

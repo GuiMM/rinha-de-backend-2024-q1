@@ -8,7 +8,7 @@
 		<version>3.2.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>rinha-backend</groupId>
+	<groupId>br.com.guimm</groupId>
 	<artifactId>rinha-2024-q1</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>rinha-2024-q1</name>
@@ -56,10 +56,6 @@
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.data</groupId>-->
-<!--			<artifactId>spring-data-jdbc</artifactId>-->
-<!--		</dependency>-->
 	</dependencies>
 
 	<build>

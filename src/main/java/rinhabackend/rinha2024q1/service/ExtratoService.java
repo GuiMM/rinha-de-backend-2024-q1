@@ -10,6 +10,7 @@ import rinhabackend.rinha2024q1.repository.ClientRepository;
 import rinhabackend.rinha2024q1.repository.TransacaoRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 @Service
 public class ExtratoService {
@@ -24,7 +25,7 @@ public class ExtratoService {
         Extrato extrato = null;
         Cliente cliente = clienteRepository.getCliente(id);
         if(cliente != null) {
-            Saldo saldo = Saldo.builder().total(cliente.getSaldo()).limite(cliente.getLimite()).dataExtrato(LocalDate.now()).build();
+            Saldo saldo = Saldo.builder().total(cliente.getSaldo()).limite(cliente.getLimite()).dataExtrato(LocalDateTime.now()).build();
             List<Transacao> transacoes = transacaoRepository.listaTransacaoPorCliente(id);
             extrato = Extrato.builder().saldo(saldo).ultimasTransacoes(transacoes).build();
         }

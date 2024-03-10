@@ -8,7 +8,7 @@ import lombok.Data;
 public class TransacaoDTO {
 
     private Integer valor;
-    private char tipo;
+    private String tipo;
     private String descricao;
     private Integer clienteId;
 }

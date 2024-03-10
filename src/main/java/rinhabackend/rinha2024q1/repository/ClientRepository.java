@@ -1,6 +1,7 @@
 package rinhabackend.rinha2024q1.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
@@ -30,16 +31,21 @@ public class ClientRepository {
         String query =
                 " SELECT cli.id\n" +
                 ", limite\n" +
-                ", saldoInicial + (select valor from transacao where clienteid = :id and tipo = 'c')\n" +
-                "- (select valor from transacao where clienteid = :id and tipo = 'd') as saldo\n" +
+                ", saldoInicial + (select case when sum(valor) is not null then sum(valor) else 0 end from transacao where clienteid = :id and tipo = 'c')\n" +
+                "- (select case when sum(valor) is not null then sum(valor) else 0 end from transacao where clienteid = :id and tipo = 'd') as saldo\n" +
                 "\n" +
                 "FROM cliente cli\n" +
                 "WHERE cli.id = :id \n";
 
-        return jdbcTemplate.query(query, map,
-                (resultset, rowNum) -> Cliente.builder()
-                        .id(resultset.getInt("id"))
-                        .saldo(resultset.getInt("saldo"))
-                        .limite(resultset.getInt("limite")).build()).get(0);
+       try{
+            return jdbcTemplate.queryForObject(query, map,
+                    (resultset, rowNum) -> Cliente.builder()
+                            .id(resultset.getInt("id"))
+                            .saldo(resultset.getInt("saldo"))
+                            .limite(resultset.getInt("limite")).build());
+       } catch (EmptyResultDataAccessException e) {
+           return null;
+       }
+
     }
 }
